@@ -1,6 +1,32 @@
-*.class
+package me.judoboy11.retrofly;
 
-# Package Files #
-*.jar
-*.war
-*.ear
+import Commands.Fly;
+import Listener.FlyListener;
+import java.util.ArrayList;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class Main extends JavaPlugin
+{
+  public static ArrayList<String> FlyingPlayers = new ArrayList();
+
+  public void onEnable()
+  {
+    PluginManager pm = getServer().getPluginManager();
+    getCommand("fly").setExecutor(new Fly(getConfig()));
+    pm.registerEvents(new FlyListener(getConfig()), this);
+  }
+
+  public void onDisable()
+  {
+    for (Player player : Bukkit.getOnlinePlayers()) {
+      player.setAllowFlight(false);
+      player.setFlying(false);
+      player.setFallDistance(-600.0F);
+    }
+  }
+}
